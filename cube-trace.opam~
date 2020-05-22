@@ -1,0 +1,15 @@
+opam-version: "2.0"
+name: "cube-ray"
+synopsis: "A cube terminal ray tracer"
+version: "0.0.1"
+
+build: [
+  ["dune" "subst"] {pinned}
+  ["dune" "build" "-p" name "-j" jobs]
+]
+
+depends: [
+  "dune" {build}
+  "ANSITerminal"
+]
+conflicts: [ "ssl" {= "0.5.6"} ]

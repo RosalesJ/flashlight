@@ -1,0 +1,4 @@
+(executable
+  (name cube-trace)
+  (public_name cube-trace)
+  (libraries base stdio))
