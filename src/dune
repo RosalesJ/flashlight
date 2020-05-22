@@ -1,4 +1,4 @@
 (executable
-  (name cube-trace)
-  (public_name cube-trace)
+  (name cubetrace)
+  (public_name cube-trace ansiterminal)
   (libraries base stdio))
