@@ -6,9 +6,10 @@ let clear_canvas () =
 
 let render frame =
   clear_canvas ();
+  (* This allows it to render properly *)
+  let frame = String.sub frame 0 ((String.length frame) - 1) in
   Stdio.printf "%s" frame;
-  Stdlib.flush Stdio.stdout;
-  set_cursor 100 100
+  Stdlib.flush Stdio.stdout
 
 let start_canvas () =
   ignore (Sys.command "tput smcup")
@@ -27,7 +28,7 @@ let () =
   render "A rectangle of 3";
   Unix.sleep 1;
   render line;
-  Unix.sleep 1;
+  Unix.sleep 3;
   render "A rectangle of 5";
   Unix.sleep 1;
   render circle;
