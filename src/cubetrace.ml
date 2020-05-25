@@ -24,22 +24,19 @@ let init () =
   let width, height = size () in
   Camera.from_terminal width height ~zoom:1. ~center:(0., 0.)
 
+let cam_test camera =
+  render "hello ";
+  Unix.sleep 1;
+  render (Camera.show camera);
+  Unix.sleep 2;
+  render (Figures.circle camera 600.);
+  Unix.sleep 5
+
 let () =
-  let width, height = size () in
-  let circle = Figures.circle width height 10 in
-  let line = Figures.rect width height 4 in
   let camera = init () in
 
   start_canvas ();
-  render (Camera.show camera);
-  Unix.sleep 5;
-  render "A rectangle of 3";
-  Unix.sleep 1;
-  render line;
-  Unix.sleep 3;
-  render "A rectangle of 5";
-  Unix.sleep 1;
-  render circle;
-  Unix.sleep 1;
+
+  cam_test camera;
   
   end_canvas ()
