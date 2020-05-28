@@ -6,6 +6,7 @@ let dist_sq (x_1, y_1) (x_2, y_2) =
   (square (x_1 -. x_2)) +. (square (y_1 -. y_2))
 
 let square x = x * x
+
 let dist_sq_int (x_1, y_1) (x_2, y_2) =
   (square (x_1 - x_2)) + (square (y_1 - y_2))
 

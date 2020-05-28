@@ -1,40 +1,40 @@
-type t =
-  { x_min: float
-  ; x_max: float
-  ; y_min: float
-  ; y_max: float
-  }
+open Point3
+
+type t = { center : Point3.t
+         ; normal : Point3.t
+         ; height : float
+         ; width : float }
 
 let char_height = 28.
 let char_width = 15.
 
 let terminal_aspect = char_height /. char_width
 
-let width {x_min; x_max; _} =
-  x_max -. x_min
+let aspect camera = camera.height /. camera.width
 
-let height {y_min; y_max; _} =
-  y_max -. y_min
+let show {center; normal; height; width} =
+    Printf.sprintf "center: %s normal: %s height: %f3 weight: %f3" (Point3.show center) (Point3.show normal) height width
 
-let aspect camera =
-  width camera /. height camera
+let from_terminal ?(center = Point3.make ~z:1. ()) ?(zoom = 1.) width height =
+  let height = ((Float.of_int height) *. char_height) *. zoom in
+  let width = ((Float.of_int width) *. char_width) *. zoom in
+  let normal = Point3.make ~z:(-1.) () in
+  { height; width; center; normal }
 
-let center camera =
-  match camera with
-  | {x_min; y_min; _} ->
-    (x_min +. (width camera) /. 2.,
-     y_min +. (height camera) /. 2.)
+let up = Point3.make ~y:1. ()
 
-let show {x_min; x_max; y_min; y_max} =
-    Printf.sprintf "Camera { x:(%f..%f), y:(%f..%f) }" x_min x_max y_min y_max
+let right camera = Point3.cross up camera.normal
 
-let from_terminal width height ?center:(center = 0., 0.) ~zoom:zoom =
-  let xc, yc = center in
-  let d_height = ((Float.of_int height) *. char_height /. 2.) *. zoom in
-  let d_width = ((Float.of_int width) *. char_width /. 2.) *. zoom in
+let project camera point =
+  let v_perp = scale ~c:(dot camera.normal point) camera.normal in
+  point + (neg v_perp)
 
-  { x_min = xc -. d_width
-  ; x_max = xc +. d_width
-  ; y_min = yc -. d_height
-  ; y_max = yc +. d_height
-  }
+let right_dist camera point =
+  let right = right camera in
+  let right_component = Point3.scale right ~c:(Point3.dot right point) in
+  Point3.l2 right_component
+
+let down_dist point =
+  let down = Point3.neg up in
+  let down_component = Point3.scale down ~c:(Point3.dot down point) in
+  Point3.l2 down_component

@@ -22,7 +22,7 @@ let _temp_render () =
 
 let init () =
   let width, height = size () in
-  Camera.from_terminal width height ~zoom:1. ~center:(0., 0.)
+  Camera.from_terminal width height
 
 let cam_test camera =
   render "hello ";
