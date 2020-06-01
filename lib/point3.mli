@@ -18,8 +18,12 @@ val neg : t -> t
 
 val show : t -> string
 
-val (+) : t -> t -> t
+val (<+>) : t -> t -> t
 
 val dot : t -> t -> float
 
 val cross : t -> t -> t
+
+val (<*>) : float -> t -> t
+
+val approx : t -> t -> bool

@@ -1,5 +1,4 @@
 open Base
-open Math
 
 let blk = "▓"
 let semi_solid = "."
@@ -10,7 +9,7 @@ let line cam depth =
   let open Float in
   let f Point3.{y; _} =
     if y <= depth then
-      semi_solid
+      solid
     else
       empty
   in
@@ -25,24 +24,23 @@ let screen cam =
   in
   Render.cast_cam cam ~f
 
-let rect (cam : Camera.t) buffer =
-  let open Float in
-  let f Point3.{x; y; _} =
-    if x >= (cam.x_min + buffer) &&
-       y >= (cam.y_min + buffer) &&
-       x < (cam.x_max - buffer) &&
-       y <= (cam.y_max - 1. - buffer) then
-      solid
-    else
-      empty
-  in
-  Render.cast_cam cam ~f
+(* let rect (cam : Camera.t) buffer =
+ *   let open Float in
+ *   let f Point3.{x; y; _} =
+ *     if x >= (cam.x_min + buffer) &&
+ *        y >= (cam.y_min + buffer) &&
+ *        x < (cam.x_max - buffer) &&
+ *        y <= (cam.y_max - 1. - buffer) then
+ *       solid
+ *     else
+ *       empty
+ *   in
+ *   Render.cast_cam cam ~f *)
 
-let circle cam radius =
+let circle (cam : Camera.t) radius =
   let open Float in
-  let center = Camera.center cam in
   let f Point3.{x; y; _} =
-    if dist_sq (x, y) center < square radius then
+    if Point3.dist Point3.{x; y; z = 0.} cam.center < radius then
       solid
     else
       empty

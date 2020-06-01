@@ -1,4 +1,5 @@
 open ANSITerminal
+open Lib
 
 let clear_canvas () =
   erase Screen;
@@ -17,20 +18,17 @@ let start_canvas () =
 let end_canvas () =
   ignore (Sys.command "tput rmcup")
 
-let _temp_render () =
-  Stdio.print_endline "temp_message lol"
-
 let init () =
   let width, height = size () in
   Camera.from_terminal width height
 
 let cam_test camera =
-  render "hello ";
-  Unix.sleep 1;
+  let width, height = size () in
   render (Camera.show camera);
-  Unix.sleep 2;
-  render (Figures.circle camera 600.);
-  Unix.sleep 5
+  Unix.sleep 3;
+  render @@ Figures.line camera 200. width height;
+  Unix.sleep 4
+    
 
 let () =
   let camera = init () in
