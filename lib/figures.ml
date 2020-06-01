@@ -11,7 +11,7 @@ let line cam depth =
     if y <= depth then
       solid
     else
-      empty
+      semi_solid
   in
   Render.cast_cam cam ~f
 

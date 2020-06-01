@@ -1,12 +1,14 @@
 let cast_cam (camera : Camera.t) x_samples y_samples ~f =
   let open Point3 in
-  let horiz_step = camera.width /. (Float.of_int y_samples) <*> Camera.right camera  in
-  let vert_step = camera.height /. (Float.of_int x_samples) <*> Camera.up in
+  let horiz_step = camera.width /. (Float.of_int x_samples) <*> Camera.right camera  in
+  let vert_step = camera.height /. (Float.of_int y_samples) <*> Camera.up in
 
   let init =
-    let x = (camera.height /. 2.) <*> Camera.up in
-    let y = (-. camera.width /. 2.) <*> Camera.right camera in
-    x <+> y
+    let x = -. camera.height /. 2. <*> Camera.up in
+    let y = -. camera.width /. 2. <*> Camera.right camera in
+    let char_off_x = Camera.char_width /. 2. <*> Camera.right camera in
+    let char_off_y = Camera.char_height /. 2. <*> Camera.up in
+    camera.center <+> x <+> y <+> char_off_x <+> char_off_y
   in
 
   let rec loop x y acc =

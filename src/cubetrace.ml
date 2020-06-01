@@ -22,19 +22,22 @@ let init () =
   let width, height = size () in
   Camera.from_terminal width height
 
-let cam_test camera =
+let _cam_test camera =
   let width, height = size () in
-  render (Camera.show camera);
-  Unix.sleep 3;
-  render @@ Figures.line camera 200. width height;
-  Unix.sleep 4
-    
+  let line = Figures.line camera 500. width height; in
+  ignore line;
+  Stdio.printf "%s\n" (Camera.show camera);
+  Stdio.printf "%d %d\n" width height
+
+let render_test camera =
+  start_canvas ();
+  let width, height = size () in
+  let line = Figures.circle camera 350. width height; in
+  render line;
+  ignore (Unix.sleep 5);
+  end_canvas ()
+
 
 let () =
   let camera = init () in
-
-  start_canvas ();
-
-  cam_test camera;
-  
-  end_canvas ()
+  render_test camera

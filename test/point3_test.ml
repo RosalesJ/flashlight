@@ -39,14 +39,9 @@ let camera_test () =
   assert (approx (cross up n) r);
   assert (approx (cross r up) n);
   assert (approx (cross n r) up)
-
-let render_test () =
-  
-
   
 let () =
   cross_test ();
   l2_test ();
   scale_test ();
-  camera_test ();
-  render_test ()
+  camera_test ()

@@ -1,2 +1,2 @@
 (library (name lib)
-  (libraries base))
+  (libraries base stdio))
