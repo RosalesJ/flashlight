@@ -15,7 +15,7 @@ let _cam_test camera =
   Stdio.printf "%d %d\n" width height
 
 let render_test camera =
-  let width, height = size () in
+  let duration = 2. in
   let circle = Figure.circle ~center:Point3.origin ~r:500. in
   let line = Figure.line 0. in
   let screen = Figure.screen in
@@ -23,8 +23,8 @@ let render_test camera =
   start_canvas ();
   
   [line; circle; screen]
-  |> List.map ~f:(fun figure -> Render.cast_cam ~camera ~figure width height)
-  |> List.iter ~f:(Frame.render);
+  |> List.map ~f:(cast_cam ~camera ~duration)
+  |> List.iter ~f:Frame.render;
   
   end_canvas ()
 

@@ -23,10 +23,10 @@ module Frame = struct
     Unix.sleepf duration
 end
 
-let cast_cam ~(camera: Camera.t) x_samples y_samples ~figure =
+let cast_cam ~(camera: Camera.t) ~duration figure =
   let open Point3 in
-  let horiz_step = camera.width /. (Float.of_int x_samples) <*> Camera.right camera  in
-  let vert_step = camera.height /. (Float.of_int y_samples) <*> Camera.up in
+  let horiz_step = camera.width /. (Float.of_int camera.resolution.x) <*> Camera.right camera  in
+  let vert_step = camera.height /. (Float.of_int camera.resolution.y) <*> Camera.up in
 
   let init =
     let x = -. camera.height /. 2. <*> Camera.up in
@@ -37,9 +37,9 @@ let cast_cam ~(camera: Camera.t) x_samples y_samples ~figure =
   in
 
   let rec loop x y acc =
-    if y = y_samples then
+    if y = camera.resolution.y then
       acc
-    else if x = x_samples then
+    else if x = camera.resolution.x then
       loop 0 (y + 1) (acc ^ "\n")
     else begin
       let sample_point = init
@@ -50,4 +50,4 @@ let cast_cam ~(camera: Camera.t) x_samples y_samples ~figure =
       loop (x + 1) y (acc ^ rendered_value)
     end
   in
-  Frame.{contents=loop 0 0 ""; duration = 3.}
+  Frame.{contents=loop 0 0 ""; duration }
