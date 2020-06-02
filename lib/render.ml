@@ -23,6 +23,17 @@ module Frame = struct
     Unix.sleepf duration
 end
 
+let blk = "▓"
+let semi_solid = "."
+let solid = "*"
+let empty = " "
+
+let char_from_distance = function
+  | x when x >= 0. && x < 1. -> blk
+  | x when x >= 1. && x < 2. -> solid
+  | x when x >= 2. && x < 3. -> semi_solid
+  | _ -> empty
+
 let cast_cam ~(camera: Camera.t) ~duration figure =
   let open Point3 in
   let horiz_step = camera.width /. (Float.of_int camera.resolution.x) <*> Camera.right camera  in
@@ -46,8 +57,9 @@ let cast_cam ~(camera: Camera.t) ~duration figure =
                          <+> (Float.of_int x <*> horiz_step)
                          <+> (Float.of_int y <*> vert_step)
       in
-      let rendered_value = (figure: Figure.t).intersect Ray.{origin=sample_point; direction=camera.normal} in
-      loop (x + 1) y (acc ^ rendered_value)
+      let ray = Ray.{ origin=sample_point; direction = unit (sample_point <+> neg camera.focus) } in
+      let dist = figure.intersect ray in
+      loop (x + 1) y (acc ^ char_from_distance dist)
     end
   in
   Frame.{contents=loop 0 0 ""; duration }

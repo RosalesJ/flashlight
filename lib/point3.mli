@@ -28,4 +28,6 @@ val (<*>) : float -> t -> t
 
 val approx : t -> t -> bool
 
+val unit : t -> t
+
 val origin : t

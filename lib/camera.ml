@@ -4,6 +4,7 @@ type resolution = { x: int; y: int }
 
 type t = { center : Point3.t
          ; normal : Point3.t
+         ; focus : Point3.t
          ; height : float
          ; width : float
          ; resolution: resolution}
@@ -15,15 +16,16 @@ let terminal_aspect = char_height /. char_width
 
 let aspect camera = camera.height /. camera.width
 
-let show {center; normal; height; width; resolution} =
-  Printf.sprintf "center: %s normal: %s (%.1fx%0.1f) ((%dx%d))"
-    (Point3.show center) (Point3.show normal) height width resolution.x resolution.y
+let show {center; normal; height; width; resolution; focus } =
+  Printf.sprintf "center: %s normal: %s (%.1fx%0.1f) ((%dx%d)) %s"
+    (Point3.show center) (Point3.show normal) height width resolution.x resolution.y (Point3.show focus)
 
 let from_terminal ?(center = Point3.make ~z:(-1.) ()) ?(zoom = 1.) term_width term_height =
   let height = ((Float.of_int term_height) *. char_height) *. zoom in
   let width = ((Float.of_int term_width) *. char_width) *. zoom in
   let normal = Point3.make ~z:(1.) () in
-  { height; width; center; normal; resolution={x=term_width; y=term_height} }
+  let focus = -. width /. 2. <*>  normal in
+  { height; width; center; normal; resolution={x=term_width; y=term_height}; focus }
 
 let up = Point3.make ~y:1. ()
 

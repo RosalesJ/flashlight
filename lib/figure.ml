@@ -1,11 +1,11 @@
 open Base
 
-type t = { position: Point3.t; intersect: Ray.t -> string }
+type t = { position: Point3.t; intersect: Ray.t -> float }
 
-let blk = "▓"
-let semi_solid = "."
-let solid = "*"
-let empty = " "
+let blk = 0.
+let solid = 1.
+let semi_solid = 2.
+let empty = 3.
 
 let line depth =
   let open Float in
