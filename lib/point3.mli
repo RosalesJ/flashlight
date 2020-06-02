@@ -27,3 +27,5 @@ val cross : t -> t -> t
 val (<*>) : float -> t -> t
 
 val approx : t -> t -> bool
+
+val origin : t

@@ -1,4 +1,29 @@
-let cast_cam (camera : Camera.t) x_samples y_samples ~f =
+open ANSITerminal
+open Figure
+
+let clear_canvas () =
+  erase Screen;
+  set_cursor 1 1
+
+let start_canvas () =
+  ignore (Sys.command "tput smcup")
+
+let end_canvas () =
+  ignore (Sys.command "tput rmcup")
+
+module Frame = struct
+  type t = { contents: string; duration: float}
+
+  let render {contents; duration} =
+    clear_canvas ();
+    (* This allows it to render properly *)
+    let contents = String.sub contents 0 ((String.length contents) - 1) in
+    Stdio.printf "%s" contents;
+    Stdlib.flush Stdio.stdout;
+    Unix.sleepf duration
+end
+
+let cast_cam ~(camera: Camera.t) x_samples y_samples ~figure =
   let open Point3 in
   let horiz_step = camera.width /. (Float.of_int x_samples) <*> Camera.right camera  in
   let vert_step = camera.height /. (Float.of_int y_samples) <*> Camera.up in
@@ -21,8 +46,8 @@ let cast_cam (camera : Camera.t) x_samples y_samples ~f =
                          <+> (Float.of_int x <*> horiz_step)
                          <+> (Float.of_int y <*> vert_step)
       in
-      let rendered_value = f sample_point in
+      let rendered_value = (figure: Figure.t).intersect Ray.{origin=sample_point; direction=camera.normal} in
       loop (x + 1) y (acc ^ rendered_value)
     end
   in
-  loop 0 0 ""
+  Frame.{contents=loop 0 0 ""; duration = 3.}

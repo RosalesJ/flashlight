@@ -1,28 +1,30 @@
 open Base
 
+type t = { position: Point3.t; intersect: Ray.t -> string }
+
 let blk = "▓"
 let semi_solid = "."
 let solid = "*"
 let empty = " "
 
-let line cam depth =
+let line depth =
   let open Float in
-  let f Point3.{y; _} =
+  let intersect Ray.{origin=Point3.{y; _}; _} =
     if y <= depth then
-      solid
+      blk
     else
-      semi_solid
+      empty
   in
-  Render.cast_cam cam ~f
+  { position = Point3.origin; intersect }
 
-let screen cam =
-  let f Point3.{y; _} =
+let screen =
+  let intersect Ray.{origin=Point3.{y; _}; _} =
     if (Int.of_float y) % 2 = 0 then
-      solid
-    else
       semi_solid
+    else
+      solid
   in
-  Render.cast_cam cam ~f
+  { position = Point3.origin; intersect }
 
 (* let rect (cam : Camera.t) buffer =
  *   let open Float in
@@ -37,12 +39,12 @@ let screen cam =
  *   in
  *   Render.cast_cam cam ~f *)
 
-let circle (cam : Camera.t) radius =
+let circle ?(center = Point3.origin) ~r =
   let open Float in
-  let f Point3.{x; y; _} =
-    if Point3.dist Point3.{x; y; z = 0.} cam.center < radius then
+  let intersect Ray.{origin=Point3.{x; y; _}; _} =
+    if Point3.dist Point3.{x; y; z = 0.} center < r then
       solid
     else
       empty
   in
-  Render.cast_cam cam ~f
+  { position=center; intersect }

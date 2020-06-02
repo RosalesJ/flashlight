@@ -1,2 +1,2 @@
 (library (name lib)
-  (libraries base stdio))
+  (libraries base stdio ANSITerminal))

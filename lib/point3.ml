@@ -45,3 +45,5 @@ let ( <+> ) = add
 let ( <*> ) c p = scale p ~c
 
 let approx p1 p2 = (dist p1 p2) < precision
+
+let origin = make ()
