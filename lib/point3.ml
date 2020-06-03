@@ -29,7 +29,7 @@ let sub u v = add v (neg u)
 
 let show {x; y; z} = Printf.sprintf "(%.3f, %.3f, %.3f)" x y z
 
-let dot p1 p2 = sum_components @@ pointwise ~f:(+.) p1 p2
+let dot p1 p2 = sum_components @@ pointwise ~f:( *. ) p1 p2
 
 let unit_vector p = scale ~c:(1. /. (sqrt @@ dot p p)) p
 

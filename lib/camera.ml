@@ -17,10 +17,10 @@ let terminal_aspect = char_height /. char_width
 let aspect camera = camera.height /. camera.width
 
 let show {center; normal; height; width; resolution; focus } =
-  Printf.sprintf "center: %s normal: %s (%.1fx%0.1f) ((%dx%d)) %s"
-    (Point3.show center) (Point3.show normal) height width resolution.x resolution.y (Point3.show focus)
+  Printf.sprintf "Camera: {\n center: %s\n normal: %s\n width x height: (%.3fx%0.3f)\n resolution: (%dx%d)\n focus%s\n}"
+    (Point3.show center) (Point3.show normal) width height resolution.x resolution.y (Point3.show focus)
 
-let from_terminal ?(center = Point3.make ~z:(-1.) ()) ?(zoom = 1.) term_width term_height =
+let from_terminal ?(center = Point3.origin) ?(zoom = 1.) term_width term_height =
   let height = ((Float.of_int term_height) *. char_height) *. zoom in
   let width = ((Float.of_int term_width) *. char_width) *. zoom in
   let normal = Point3.make ~z:(1.) () in
