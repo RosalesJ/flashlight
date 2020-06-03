@@ -1,5 +1,5 @@
 
-type t = { position: Point3.t; intersect: Ray.t -> float }
+type t = { intersect: Ray.t -> float }
 
 let blk = 0.
 let solid = 1.
@@ -13,7 +13,7 @@ let line depth =
     else
       empty
   in
-  { position = Point3.origin; intersect }
+  { intersect }
 
 let screen =
   let intersect Ray.{origin=Point3.{y; _}; _} =
@@ -22,7 +22,7 @@ let screen =
     else
       solid
   in
-  { position = Point3.origin; intersect }
+  { intersect }
 
 (* let rect (cam : Camera.t) buffer =
  *   let open Float in
@@ -43,8 +43,7 @@ let circle ?(center = Point3.origin) ~r =
       solid
     else
       empty
-  in
-  { position=center; intersect }
+  in { intersect }
 
 let sphere ?(center = Point3.origin) ~r =
   let open Point3 in
@@ -54,13 +53,27 @@ let sphere ?(center = Point3.origin) ~r =
     let discr = (comp *. comp) -. (dot diff diff) +. (r *. r) in
     if discr < 0. then
       Float.infinity
-    else begin      
+    else begin
       let plus = -. comp +. sqrt discr in
       let minus = -. comp -. sqrt discr in
       (* Stdio.printf "Origin:%s  Dir:%s\n" (Point3.show p) (Point3.show d);
        * Stdio.printf "  Diff:%s  Comp:%0.3f  discr: %0.3f.  plus:%0.3f  minus: %0.3f\n" (Point3.show diff) comp discr plus minus; *)
       Float.min plus minus
     end
-  in
+  in { intersect }
 
-  {position=center; intersect}
+let plane ~normal ~origin =
+  let intersect Ray.{ origin=p; direction=d } =
+    let dn = Point3.dot d normal in
+    let pn = Point3.dot p normal in
+    let on = Point3.dot origin normal in
+    if dn == 0. then
+      Float.infinity
+    else begin
+      let result = (on -.  pn) /. dn in
+      if result < 0. then
+        Float.infinity
+      else
+        result
+    end
+  in { intersect }

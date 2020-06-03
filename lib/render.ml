@@ -53,8 +53,7 @@ let cast_cam ~(camera: Camera.t) ~duration figure =
     camera.center <+> x <+> y <+> char_off_x <+> char_off_y
   in
 
-  Stdio.printf "init:%s  h_step:%s  v_step:%s\n" (Point3.show init) (Point3.show horiz_step) (Point3.show vert_step);
-
+  (* Stdio.printf "init:%s  h_step:%s  v_step:%s\n" (Point3.show init) (Point3.show horiz_step) (Point3.show vert_step); *)
   let rec loop x y acc =
     if y = camera.resolution.y then
       acc
