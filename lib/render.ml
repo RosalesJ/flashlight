@@ -1,5 +1,4 @@
 open ANSITerminal
-open Figure
 
 let clear_canvas () =
   erase Screen;
@@ -40,7 +39,7 @@ let char_from_distance = function
   | x when x >= 12. && x < 100. -> distant
   | _ -> empty
 
-let cast_cam ~(camera: Camera.t) ~duration figure =
+let cast_cam ~(camera: Camera.t) ~duration scene =
   let open Point3 in
   let horiz_step = camera.width /. (Float.of_int camera.resolution.x) <*> Camera.right camera  in
   let vert_step = -. camera.height /. (Float.of_int camera.resolution.y) <*> Camera.up in
@@ -67,7 +66,7 @@ let cast_cam ~(camera: Camera.t) ~duration figure =
       let direction = unit (sample_point <+> neg camera.focus) in
       (* let direction = camera.normal in *)
       let ray = Ray.{ origin = sample_point; direction } in
-      let dist = figure.intersect ray in
+      let dist = Scene.intersect_all scene ray in
       (* if y mod 3 = 0 && x mod 3 = 0 || dist != Float.infinity then
        *   Stdio.printf "Origin:%s  Dir:%s  Dist:%f\n" (Point3.show ray.origin) (Point3.show ray.direction) dist; *)
       loop (x + 1) y (acc ^ char_from_distance dist)
