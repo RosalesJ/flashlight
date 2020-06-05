@@ -3,47 +3,24 @@ module type Figure_instance = sig
   val this : t
 end
 
-module type Movable_instance = sig
-  include Figure.Movable
-  val this : t
-end
+type t = (module Figure_instance) list
 
-type is_movable =
-  | Movable of (module Movable_instance)
-  | Non_movable of (module Figure_instance)
+let build_instance (type a) (module X : Figure.T with type t = a) x =
+  (module struct include X let this = x end : Figure_instance)
 
-type t = is_movable list
-
-let build_movable (type a) (module X : Figure.Movable with type t = a) x =
-  Movable (module struct include X let this = x end : Movable_instance)
-
-let build_non_movable (type a) (module X : Figure.T with type t = a) x =
-  Non_movable (module struct include X let this = x end : Figure_instance)
-
-let empty = []
-
-let of_movable fig_mod =
-  let instance_mod = build_movable fig_mod in
-  List.map instance_mod
-
-let of_non_movable fig_mod =
-  let instance_mod = build_non_movable fig_mod in
+let of_figures fig_mod =
+  let instance_mod = build_instance fig_mod in
   List.map instance_mod
 
 let union s1 s2 = List.concat [s1; s2]
 
-let insert f mod_fig x scene =
-  f mod_fig x :: scene
+let empty = []
 
-let insert_movable = insert build_movable
-
-let insert_non_movable = insert build_non_movable
+let insert mod_fig x scene =
+  build_instance mod_fig x :: scene
 
 let intersect_all (figures : t) ray =
-  let f = function
-    | Movable (module X)     -> X.intersect ray X.this
-    | Non_movable (module X) -> X.intersect ray X.this
-  in figures
-  |> List.map f
+  figures
+  |> List.map (fun (module X : Figure_instance) -> X.intersect ray X.this)
   |> List.fold_left Float.min Float.infinity
 

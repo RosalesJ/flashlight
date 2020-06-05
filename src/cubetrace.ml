@@ -25,7 +25,7 @@ let translate_spheres =
          :: acc)
   in
   let scene = loop 30 [] in
-  Scene.of_movable (module Figure.Sphere) scene
+  Scene.of_figures (module Figure.Sphere) scene
 
 let _render_test camera =
   let duration = 5. in
@@ -46,9 +46,9 @@ let plain_test camera =
   start_canvas ();
 
   [_plane_b; _plane_v; (* plane_d; plane_dz *)]
-  |> Scene.of_non_movable (module Figure.Plane)
-  |> Scene.insert_non_movable (module Figure.Plane) _plane_dz
-  |> Scene.insert_movable (module Figure.Sphere) _sphere
+  |> Scene.of_figures (module Figure.Plane)
+  |> Scene.insert (module Figure.Plane) _plane_dz
+  |> Scene.insert (module Figure.Sphere) _sphere
   |> cast_cam ~camera ~duration
   |> Frame.render;
   
@@ -56,7 +56,7 @@ let plain_test camera =
 
 let _final_test camera =
   [Figure.Sphere.{ center = (Point3.make ~z:10. ()); radius = 5. }]
-  |> Scene.of_movable (module Figure.Sphere)
+  |> Scene.of_figures (module Figure.Sphere)
   |> Render.cast_cam ~camera ~duration:3.
   |> ignore
 
