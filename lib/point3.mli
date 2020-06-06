@@ -1,4 +1,4 @@
-type t = {x: float; y: float; z: float}
+type t
 
 val make : ?x:float -> ?y:float -> ?z:float -> unit -> t
 
@@ -31,3 +31,7 @@ val approx : t -> t -> bool
 val unit : t -> t
 
 val origin : t
+
+val x : t -> float
+val y : t -> float
+val z : t -> float

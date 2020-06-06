@@ -10,10 +10,12 @@ let init () =
 let _cam_test camera =
   Stdio.printf "%s\n" (Camera.show camera)
 
-let _plane_b = Figure.Plane.{ origin = (Point3.make ~y:(-. 3.) ()); normal = (Camera.up) }
-let plane_d = Figure.Plane.{ origin = (Point3.make ~x:(-. 3.) ~y:(-2.) ()); normal = (Point3.unit (Point3.make ~x:1. ~y:1. ())) }
-let _plane_dz = Figure.Plane.{ origin = (Point3.make ~x:(-. 3.) ~y:(-2.) ()); normal = (Point3.unit (Point3.make ~x:1. ~y:1. ~z:(-. 1.)())) }
-let _sphere = Figure.Sphere.{ center = (Point3.make ~z:(8.5) ()); radius = 6. }
+let _plane_b = Figure.Plane.{ origin = (Point3.make ~y:(-5.) ()); normal = (Camera.up) }
+let plane_d = Figure.Plane.{ origin = (Point3.make ~x:(-6.) ~y:(-2.) ()); normal = (Point3.unit (Point3.make ~x:1. ~y:1. ())) }
+let _plane_dz = Figure.Plane.{ origin = (Point3.make ~x:(-3.) ~y:(-2.) ()); normal = (Point3.unit (Point3.make ~x:1. ~y:1. ~z:(-1.)())) }
+
+let _sphere = Figure.Sphere.{ center = (Point3.make ~z:(10.) ~x:(-2.) ()); radius = 6. }
+let _sphere2 = Figure.Sphere.{ center = (Point3.make ~z:(4.) ~x:6. ()); radius = 2. }
     
 let translate_spheres =
   let rec loop n acc =
@@ -28,7 +30,7 @@ let translate_spheres =
   Scene.of_figures (module Figure.Sphere) scene
 
 let _render_test camera =
-  let duration = 5. in
+  let duration = 7. in
   (* let line = Figure.line 0. in
    * let screen = Figure.screen in *)
   let frame = cast_cam ~camera ~duration translate_spheres in
@@ -41,14 +43,17 @@ let _render_test camera =
 
 let plain_test camera =
   let duration = 4. in
-  let _plane_v = Figure.Plane.{ origin = (Point3.make ~x:(-. 4.) ()); normal = (Camera.right camera)} in
+  let _plane_v = Figure.Plane.{ origin = (Point3.make ~x:(-5.) ()); normal = (Camera.right camera)} in
                    
   start_canvas ();
 
-  [_plane_b; _plane_v; (* plane_d; plane_dz *)]
-  |> Scene.of_figures (module Figure.Plane)
-  |> Scene.insert (module Figure.Plane) _plane_dz
+  (* [_plane_b; _plane_v; (\* plane_d; plane_dz *\)] *)
+  Scene.empty
+  |> Scene.insert (module Figure.Plane) _plane_b
+  |> Scene.insert (module Figure.Plane) _plane_v
+  (* |> Scene.insert (module Figure.Plane) _plane_dz *)
   |> Scene.insert (module Figure.Sphere) _sphere
+  |> Scene.insert (module Figure.Sphere) _sphere2
   |> cast_cam ~camera ~duration
   |> Frame.render;
   

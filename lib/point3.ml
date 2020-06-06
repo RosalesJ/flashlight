@@ -49,3 +49,8 @@ let approx p1 p2 = (dist p1 p2) < precision
 let origin = make ()
 
 let unit p = 1. /. (l2 p) <*> p
+
+let x p = p.x
+let y p = p.y
+let z p = p.z
+

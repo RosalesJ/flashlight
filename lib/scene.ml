@@ -19,7 +19,7 @@ let empty = []
 let insert mod_fig x scene =
   build_instance mod_fig x :: scene
 
-let intersect_all (figures : t) ray =
+let intersect_all figures ray =
   figures
   |> List.map (fun (module X : Figure_instance) -> X.intersect ray X.this)
   |> List.fold_left Float.min Float.infinity
