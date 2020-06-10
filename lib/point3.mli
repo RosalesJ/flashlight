@@ -32,6 +32,8 @@ val unit : t -> t
 
 val origin : t
 
+val tuple : t -> float * float * float
+
 val x : t -> float
 val y : t -> float
 val z : t -> float

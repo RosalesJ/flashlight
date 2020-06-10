@@ -50,6 +50,8 @@ let origin = make ()
 
 let unit p = 1. /. (l2 p) <*> p
 
+let tuple {x; y; z} = (x, y, z)
+
 let x p = p.x
 let y p = p.y
 let z p = p.z
