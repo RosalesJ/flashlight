@@ -1,3 +1,3 @@
 (lang dune 1.2)
-(name cubetrace)
+(package (name cubetrace))
 (version 0.0.1)

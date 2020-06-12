@@ -14,7 +14,9 @@ module type Movable = sig
 end
 
 module Sphere : sig
-  type t = { center: Point3.t; radius: float }
+  type t = { center: Point3.t
+           ; radius: float
+           }
   include Movable with type t := t
 end = struct
   open Point3
@@ -58,40 +60,61 @@ end = struct
 end
 
 
-(* let line depth =
- *   let intersect Ray.{origin=Point3.{y; _}; _} =
- *     if y <= depth then
- *       blk
- *     else
- *       empty
- *   in
- *   { intersect }
- * 
- * let screen =
- *   let intersect Ray.{origin=Point3.{y; _}; _} =
- *     if (Int.of_float y) mod 2 = 0 then
- *       semi_solid
- *     else
- *       solid
- *   in
- *   { intersect } *)
+module Triangle : sig
+  type t = { a: Point3.t; b: Point3.t; c: Point3.t }
+  include Movable with type t := t
+end = struct
+  open Point3
+  
+  type t = { a: Point3.t; b: Point3.t; c: Point3.t }
 
-(* let rect (cam : Camera.t) buffer =
- *   let open Float in
- *   let f Point3.{x; y; _} =
- *     if x >= (cam.x_min + buffer) &&
- *        y >= (cam.y_min + buffer) &&
- *        x < (cam.x_max - buffer) &&
- *        y <= (cam.y_max - 1. - buffer) then
- *       solid
- *     else
- *       empty
- *   in
- *   Render.cast_cam cam ~f *)
-(* let circle ?(center = Point3.origin) ~r =
- *   let intersect Ray.{origin=Point3.{x; y; _}; _} =
- *     if Point3.dist Point3.{x; y; z = 0.} center < r then
- *       solid
- *     else
- *       empty
- *   in { intersect } *)
+  let contains {a; b; c} p =
+    let open Point3 in
+    let ab = b <+> neg a in
+    let ac = c <+> neg a in
+    let ap = p <+> neg a in
+    let normal = unit @@ cross ab ac in
+    
+    let basis_inv = Transform.inv_exn @@ Transform.from_basis ~i:ab ~j:ac ~k:normal in
+
+    let transformed = Transform.apply basis_inv ap in
+    let cond = match Point3.tuple transformed with
+      | (x, y, _) -> x >= 0. && y >= 0. && x +. y <= 1.
+    in cond
+
+  let intersect ray { a; b; c } =
+    let ab = b <+> neg a in
+    let ac = c <+> neg a in
+    let normal = cross ab ac in
+    (* Stdio.printf "%s %s %s" (Point3.show ab) (Point3.show bc) (Point3.show normal); *)
+    let pl = Plane.{origin=ab; normal} in
+    let dist = Plane.intersect ray pl in
+    (* Stdio.printf "%0.4f\n" dist; *)
+    if dist >= Float.infinity then
+      Float.infinity
+    else begin
+      let point = dist <*> ray.direction in
+      if contains {a; b; c} point then
+        dist
+      else
+        Float.infinity
+    end
+
+  let move _ p =
+    {a=p; b=p; c=p}
+end
+
+let contains a b c p =
+  let open Point3 in
+  let ab = b <+> neg a in
+  let ac = c <+> neg a in
+  let ap = p <+> neg a in
+  let normal = cross ab ac in
+
+  let basis_inv = Transform.inv_exn @@ Transform.from_basis ~i:ab ~j:ac ~k:normal in
+
+  let transformed = Transform.apply basis_inv ap in
+  let repr = Point3.show (transformed) in
+  let cond = match Point3.tuple transformed with
+    | (x, y, _) -> x >= 0. && y >= 0. && x +. y <= 1.
+  in (repr, cond)
