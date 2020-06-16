@@ -1,4 +1,6 @@
 (executable
   (name cubetrace)
   (public_name cube-trace)
+  (modes byte exe)
+  (flags (:standard -g))
   (libraries base stdio ANSITerminal lib))

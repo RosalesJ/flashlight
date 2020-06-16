@@ -1,2 +1,4 @@
-(library (name lib)
+(library
+  (name lib)
+  (flags (:standard -g))
   (libraries base stdio ANSITerminal))

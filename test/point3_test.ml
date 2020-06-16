@@ -29,7 +29,7 @@ let scale_test () =
 let camera_test () =
   let open Camera in
   let cam = match from_terminal 7 5 with
-    | {height; width; center; _} -> {height; width; center; normal=Point3.{x=((sqrt 2.) /. 2.); z=((sqrt 2.) /. 2.); y=0.}}
+    | {height; width; center; _} -> {height; width; center; normal=(Point3.make ~x:((sqrt 2.) /. 2.) ~z:((sqrt 2.) /. 2.) ()); resolution={x=10; y=40}; focus=(Point3.make ())}
   in
   let n = cam.normal in
   let r = right cam in

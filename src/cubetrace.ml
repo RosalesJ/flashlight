@@ -47,13 +47,13 @@ let _plain_test camera =
   |> Scene.insert (module Figure.Sphere) _sphere2
 
 let _triangle_test=
-let triangle = Figure.Triangle.{
-    a = Point3.make ~x:(-0.5) ~y:(-1.2) ~z:2.3 ();
-    b = Point3.make ~x:(0.5) ~y:(-1.2) ~z:2.3 ();
-    c = Point3.make ~x:(0.) ~y:(0.5) ~z:3. ()
-  }
-in
-Scene.insert (module Figure.Triangle) triangle Scene.empty
+  let triangle = Figure.Triangle.{
+      b = Point3.make ~x:(-6.) ~y:(2.) ~z:1. ();
+      c = Point3.make ~x:(4.) ~y:(-3.) ~z:5. ();
+      a = Point3.make ~x:(11.) ~y:(7.) ~z:10. ()
+    }
+  in
+  Scene.insert (module Figure.Triangle) triangle Scene.empty
 
 let _final_test camera =
   [Figure.Sphere.{ center = (Point3.make ~z:10. ()); radius = 5. }]
