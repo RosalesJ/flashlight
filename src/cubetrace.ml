@@ -55,6 +55,45 @@ let _triangle_test=
   in
   Scene.insert (module Figure.Triangle) triangle Scene.empty
 
+let _square_test =
+  let triangle = Figure.Square.{
+      a = Point3.make ~x:(-1.) ~y:(1.) ~z:1. ();
+      c = Point3.make ~x:(1.) ~y:(1.) ~z:1. ();
+      b = Point3.make ~x:(-1.) ~y:(-1.) ~z:1. ();
+      d = Point3.make ~x:(1.) ~y:(-1.) ~z:1. ()
+    }
+  in
+  Scene.insert (module Figure.Square) triangle Scene.empty
+
+let make_cube center r =
+  let open Point3 in
+  let (x, y, z) = tuple center in
+
+  let a = make ~x:(x -. r) ~y:(y +. r) ~z:(z +. r) () in
+  let b = make ~x:(x +. r) ~y:(y +. r) ~z:(z +. r) () in
+  let c = make ~x:(x -. r) ~y:(y +. r) ~z:(z -. r) () in
+  let d = make ~x:(x +. r) ~y:(y +. r) ~z:(z -. r) () in
+  let h = make ~x:(x -. r) ~y:(y -. r) ~z:(z +. r) () in
+  let e = make ~x:(x +. r) ~y:(y -. r) ~z:(z +. r) () in
+  let f = make ~x:(x -. r) ~y:(y -. r) ~z:(z -. r) () in
+  let g = make ~x:(x +. r) ~y:(y -. r) ~z:(z -. r) () in
+
+  Figure.Cube.{
+      up = Figure.make_square ~a ~b ~c ~d;
+      down = Figure.make_square ~a:h ~b:e ~c:f ~d:g;
+      left = Figure.make_square ~a ~b:h ~c ~d:f;
+      right = Figure.make_square ~a:e ~b ~c:g ~d;
+      front = Figure.make_square ~a:f ~b:g ~c ~d;
+      back = Figure.make_square ~a ~b ~c:h ~d:e
+    } 
+
+let _cube_test =
+  let center = Point3.make ~x:(-3.5) ~y:(-4.5) ~z:(5.) () in
+  let r = 3. in
+  let cube = make_cube center r in
+
+  Scene.insert (module Figure.Cube) cube Scene.empty
+
 let _final_test camera =
   [Figure.Sphere.{ center = (Point3.make ~z:10. ()); radius = 5. }]
   |> Scene.of_figures (module Figure.Sphere)
@@ -70,9 +109,10 @@ let () =
   (* _cam_test camera; *)
   (* _final_test camera; *)
   _cam_test camera;
-  _triangle_test
+  (* _triangle_test *)
   (* |> cast_cam ~camera ~duration *)
   (* |> ignore; *)
+  _cube_test
   |> render_scene camera duration;
   ignore ()
 

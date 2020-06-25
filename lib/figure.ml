@@ -92,3 +92,49 @@ end = struct
   let move _ p =
     {a=p; b=p; c=p}
 end
+
+
+module Square : sig
+  type t = {a : Point3.t; b: Point3.t; c: Point3.t; d: Point3.t}
+  include Movable with type t := t
+end = struct
+  type t = {a : Point3.t; b: Point3.t; c: Point3.t; d: Point3.t}
+
+  let intersect ray {a; b; c; d} =
+    let t1 = Triangle.{a; b; c} in
+    let t2 = Triangle.{a=d; b; c} in
+    min (Triangle.intersect ray t1) (Triangle.intersect ray t2)
+
+  let move _ p = {a=p; b=p; c=p; d=p}
+end
+
+module Cube : sig
+  type t =
+    { front: Square.t
+    ; back: Square.t
+    ; up: Square.t
+    ; down: Square.t
+    ; left: Square.t
+    ; right: Square.t }
+  include Movable with type t := t
+end = struct
+  type t =
+    { front: Square.t
+    ; back: Square.t
+    ; up: Square.t
+    ; down: Square.t
+    ; left: Square.t
+    ; right: Square.t }
+
+  let intersect ray {front; back; up; down; left; right} =
+    [front; back; up; down; left; right]
+    |> List.map (Square.intersect ray)
+    |> List.fold_left min Float.infinity
+
+  let move _ p =
+    let sq = Square.{a=p; b=p; c=p; d=p} in
+    {front = sq; back = sq; left=sq; right=sq; up=sq; down=sq}
+end
+
+let make_square ~a ~b ~c ~d =
+  Square.{a; b; c; d}

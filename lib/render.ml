@@ -52,7 +52,6 @@ let cast_cam ~(camera: Camera.t) ~duration scene =
     camera.center <+> x <+> y <+> char_off_x <+> char_off_y
   in
 
-  (* Stdio.printf "init:%s  h_step:%s  v_step:%s\n" (Point3.show init) (Point3.show horiz_step) (Point3.show vert_step); *)
   let rec loop x y acc =
     if y = camera.resolution.y then
       acc
@@ -64,7 +63,7 @@ let cast_cam ~(camera: Camera.t) ~duration scene =
                    <+> (Float.of_int y <*> vert_step)
       in
       let direction = unit (sample_point <+> neg camera.focus) in
-      (* let direction = camera.normal in *)
+
       let ray = Ray.{ origin = sample_point; direction } in
       let dist = Scene.intersect_all scene ray in
       (* if y mod 3 = 0 && x mod 3 = 0 || dist != Float.infinity then
