@@ -6,7 +6,7 @@ let square x = x *. x
 
 let sum_components {x; y; z} = x +. y +. z
 
-let make ?(x = 0.) ?(y = 0.) ?(z = 0.) () = {x; y; z;}
+let make ~xyz:(x, y, z) = {x; y; z;}
 
 let map { x; y; z } ~f = {x = f x; y = f y; z = f z}
 
@@ -46,7 +46,7 @@ let ( <*> ) c p = scale p ~c
 
 let approx p1 p2 = (dist p1 p2) < precision
 
-let origin = make ()
+let origin = make ~xyz:(0., 0., 0.)
 
 let unit p = 1. /. (l2 p) <*> p
 

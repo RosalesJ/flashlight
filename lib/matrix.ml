@@ -13,12 +13,10 @@ let transpose { a0; b0; c0; a1; b1; c1; a2; b2; c2 } =
   }
 
 let apply { a0; b0; c0; a1; b1; c1; a2; b2; c2} p =
-  let open Point3 in
-  make
-    ~x:(t_dot (a0, b0, c0) (x p, y p, z p))
-    ~y:(t_dot (a1, b1, c1) (x p, y p, z p))
-    ~z:(t_dot (a2, b2, c2) (x p, y p, z p))
-    ()
+  let p = Point3.tuple p in
+  Point3.make ~xyz:((t_dot (a0, b0, c0) p),
+                    (t_dot (a1, b1, c1) p),
+                    (t_dot (a2, b2, c2) p))
 
 let map { a0; b0; c0; a1; b1; c1; a2; b2; c2} ~f =
   { a0 = f a0; b0 = f b0; c0 = f c0; a1 = f a1; b1 = f b1; c1 = f c1; a2 = f a2; b2 = f b2; c2 = f c2 }

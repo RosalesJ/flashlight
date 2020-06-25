@@ -80,7 +80,7 @@ end = struct
       Float.infinity
     else begin
       dist <*> ray.direction <+> ray.origin <+> neg a
-      |> Transform.(apply @@ inv_exn @@ from_basis ~i:ab ~j:ac ~k:normal)
+      |> Matrix.(apply @@ inv_exn @@ from_basis ~i:ab ~j:ac ~k:normal)
       |> tuple
       |> function (x, y, _) ->
         if x >= 0. && y >= 0. && x +. y <= 1. then
@@ -138,3 +138,25 @@ end
 
 let make_square ~a ~b ~c ~d =
   Square.{a; b; c; d}
+
+let make_cube center r =
+  let open Point3 in
+  let (x, y, z) = tuple center in
+
+  let a = make ~xyz:(x -. r, y +. r, z +. r) in
+  let b = make ~xyz:(x +. r, y +. r, z +. r) in
+  let c = make ~xyz:(x -. r, y +. r, z -. r) in
+  let d = make ~xyz:(x +. r, y +. r, z -. r) in
+  let h = make ~xyz:(x -. r, y -. r, z +. r) in
+  let e = make ~xyz:(x +. r, y -. r, z +. r) in
+  let f = make ~xyz:(x -. r, y -. r, z -. r) in
+  let g = make ~xyz:(x +. r, y -. r, z -. r) in
+
+  Cube.{
+    up    = make_square ~a   ~b   ~c   ~d;
+    back  = make_square ~a   ~b   ~c:h ~d:e;
+    left  = make_square ~a   ~b:h ~c   ~d:f;
+    right = make_square ~a:e ~b   ~c:g ~d;
+    front = make_square ~a:f ~b:g ~c   ~d;
+    down  = make_square ~a:h ~b:e ~c:f ~d:g;
+  }

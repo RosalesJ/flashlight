@@ -23,11 +23,11 @@ let show {center; normal; height; width; resolution; focus } =
 let from_terminal ?(center = Point3.origin) ?(zoom = 1.) term_width term_height =
   let height = ((Float.of_int term_height) *. char_height) *. zoom in
   let width = ((Float.of_int term_width) *. char_width) *. zoom in
-  let normal = Point3.make ~z:(1.) () in
+  let normal = Point3.make ~xyz:(0., 0., 1.) in
   let focus = -. width /. 2. <*>  normal in
   { height; width; center; normal; resolution={x=term_width; y=term_height}; focus }
 
-let up = Point3.make ~y:1. ()
+let up = Point3.make ~xyz:(0., 1., 0.)
 
 let right camera = Point3.cross up camera.normal
 

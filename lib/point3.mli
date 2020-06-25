@@ -1,6 +1,6 @@
 type t
 
-val make : ?x:float -> ?y:float -> ?z:float -> unit -> t
+val make : xyz:(float * float * float) -> t
 
 val map : t -> f:(float -> float) -> t
 
