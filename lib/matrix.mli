@@ -15,3 +15,7 @@ val inv : t -> t option
 val inv_exn : t -> t
 
 val show : t -> string
+
+val make : (float * float * float) *
+           (float * float * float) *
+           (float * float * float) -> t

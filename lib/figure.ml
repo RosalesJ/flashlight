@@ -10,7 +10,7 @@ end
 
 module type Movable = sig
   include T
-  val move : t -> Point3.t -> t
+  val move : Affine.t -> t -> t
 end
 
 module Sphere : sig
@@ -22,8 +22,9 @@ end = struct
   open Point3
   type t = {center: Point3.t; radius: float}
 
-  let move sphere point =
-    { sphere with center = point }
+  let move trans sphere =
+    let transformed = Affine.apply trans sphere.center in
+    { sphere with center = transformed }
 
   let intersect Ray.{ origin=p; direction=d } sphere =
     let diff = p <+> neg sphere.center in
@@ -89,8 +90,9 @@ end = struct
           Float.infinity
     end
 
-  let move _ p =
-    {a=p; b=p; c=p}
+  let move trans {a; b; c} =
+    let update = Affine.apply trans in
+    {a= update a; b= update b; c= update c}
 end
 
 
@@ -100,12 +102,14 @@ module Square : sig
 end = struct
   type t = {a : Point3.t; b: Point3.t; c: Point3.t; d: Point3.t}
 
+  let pointwise f {a; b; c; d} = {a=f a; b=f b; c=f c; d=f d}
+
   let intersect ray {a; b; c; d} =
     let t1 = Triangle.{a; b; c} in
     let t2 = Triangle.{a=d; b; c} in
     min (Triangle.intersect ray t1) (Triangle.intersect ray t2)
 
-  let move _ p = {a=p; b=p; c=p; d=p}
+  let move trans sq = pointwise (Affine.apply trans) sq
 end
 
 module Cube : sig
@@ -126,18 +130,20 @@ end = struct
     ; left: Square.t
     ; right: Square.t }
 
+  let pointwise f {up; back; left; right; front; down} =
+    {up = f up; back = f back; left = f left; right = f right; front = f front; down = f down }
+
   let intersect ray {front; back; up; down; left; right} =
     [front; back; up; down; left; right]
     |> List.map (Square.intersect ray)
     |> List.fold_left min Float.infinity
 
-  let move _ p =
-    let sq = Square.{a=p; b=p; c=p; d=p} in
-    {front = sq; back = sq; left=sq; right=sq; up=sq; down=sq}
+  let move trans cube = pointwise (Square.move trans) cube
 end
 
 let make_square ~a ~b ~c ~d =
   Square.{a; b; c; d}
+
 
 let make_cube center r =
   let open Point3 in

@@ -14,7 +14,7 @@ let _plane_b =  Figure.Plane.{ origin = (Point3.make ~xyz:(0., -5., 0.));  norma
 let plane_d =   Figure.Plane.{ origin = (Point3.make ~xyz:(-6., -2., 0.)); normal = Point3.unit (Point3.make ~xyz:(1., 1., 0.)) }
 let _plane_dz = Figure.Plane.{ origin = (Point3.make ~xyz:(-3., -2., 0.)); normal = Point3.unit (Point3.make ~xyz:(1., 1., -1.)) }
 
-let _sphere = Figure.Sphere.{ center = (Point3.make ~xyz:(-2., 0., 10.)); radius = 6. }
+let _sphere =  Figure.Sphere.{ center = (Point3.make ~xyz:(-2., 0., 10.)); radius = 6. }
 let _sphere2 = Figure.Sphere.{ center = (Point3.make ~xyz:(6., 0., 4.)); radius = 2. }
 
 let render_scene camera duration scene =

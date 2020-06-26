@@ -80,6 +80,9 @@ let inv a =
     Some (inv_exn a)
   with Division_by_zero ->
     None
+      
+let make ((a0, b0, c0), (a1, b1, c1), (a2, b2, c2)) =
+      { a0; b0; c0; a1; b1; c1; a2; b2; c2 }
 
 let show { a0; b0; c0; a1; b1; c1; a2; b2; c2 } =
   Printf.sprintf "| %0.2f %0.2f %0.2f |\n| %0.2f %0.2f %0.2f |\n| %0.2f %0.2f %0.2f |"
