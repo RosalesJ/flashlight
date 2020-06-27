@@ -16,6 +16,9 @@ let of_figures fig_mod =
 
 let union s1 s2 = List.concat [s1; s2]
 
+let singleton mod_fig s =
+  [build_instance mod_fig s]
+
 let empty = []
 
 let insert mod_fig x scene =

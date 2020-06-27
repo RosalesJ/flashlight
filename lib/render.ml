@@ -63,11 +63,8 @@ let cast_cam ~(camera: Camera.t) ~duration scene =
                    <+> (Float.of_int y <*> vert_step)
       in
       let direction = unit (sample_point <+> neg camera.focus) in
-
       let ray = Ray.{ origin = sample_point; direction } in
       let dist = Scene.intersect_all scene ray in
-      (* if y mod 3 = 0 && x mod 3 = 0 || dist != Float.infinity then
-       *   Stdio.printf "Origin:%s  Dir:%s  Dist:%f\n" (Point3.show ray.origin) (Point3.show ray.direction) dist; *)
       loop (x + 1) y (acc ^ char_from_distance dist)
     end
   in

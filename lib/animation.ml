@@ -1,7 +1,7 @@
 type t = Render.Frame.t list
 
 
-let linear duration trans framerate camera cube =
+let linear duration framerate camera cube trans =
   let total_frames = Float.to_int (framerate /. duration) in
   
   let rec loop i state acc =
@@ -16,4 +16,22 @@ let linear duration trans framerate camera cube =
     end
   in
   loop 0 cube []
+
+
+let linear_tri duration framerate camera triangle trans =
+  let total_frames = Float.to_int (framerate *. duration) in
+  
+  let rec loop i state acc =
+    if i > total_frames then
+      acc
+    else begin
+      let scene = Scene.of_figures (module Figure.Triangle) [state] in
+      let frame = Render.cast_cam ~camera ~duration:(1. /. framerate) scene in
+      
+      let new_state = Figure.Triangle.move trans state in
+      loop (i + 1) new_state (frame :: acc)
+    end
+  in
+  loop 0 triangle []
+  |> List.rev
         
