@@ -166,3 +166,12 @@ let make_cube center r =
     front = make_square ~a:f ~b:g ~c   ~d;
     down  = make_square ~a:h ~b:e ~c:f ~d:g;
   }
+
+let triangle_center Triangle.{a; b; c} =
+  let (ax, ay, az) = Point3.tuple a in
+  let (bx, by, bz) = Point3.tuple b in
+  let (cx, cy, cz) = Point3.tuple c in
+  Point3.make ~xyz:(
+    (ax +. bx +. cx) /. 3.,
+    (ay +. by +. cy) /. 3.,
+    (az +. bz +. cz) /. 3.)
