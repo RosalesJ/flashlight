@@ -24,7 +24,7 @@ let cube_spin camera =
   let framerate = 10. in
   let duration = 6. in
 
-  let rot_x = Transforms.rotation_x 0.1 in
+  let rot_x = Transforms.rotation_x 0.3 in
   let rot_y = Transforms.rotation_y 0.1 in
 
   Affine.compose rot_x rot_y

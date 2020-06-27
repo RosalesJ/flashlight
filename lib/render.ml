@@ -20,6 +20,9 @@ module Frame = struct
     Stdio.printf "%s" contents;
     Stdlib.flush Stdio.stdout;
     Unix.sleepf duration
+
+  let with_duration ~duration contents =
+      {duration; contents}
 end
 
 let blk = "▓"
@@ -39,7 +42,7 @@ let char_from_distance = function
   | x when x >= 12. && x < 100. -> distant
   | _ -> empty
 
-let cast_cam ~(camera: Camera.t) ~duration scene =
+let cast_cam ~(camera: Camera.t) scene =
   let open Point3 in
   let horiz_step = camera.width /. (Float.of_int camera.resolution.x) <*> Camera.right camera  in
   let vert_step = -. camera.height /. (Float.of_int camera.resolution.y) <*> Camera.up in
@@ -68,4 +71,4 @@ let cast_cam ~(camera: Camera.t) ~duration scene =
       loop (x + 1) y (acc ^ char_from_distance dist)
     end
   in
-  Frame.{contents=loop 0 0 ""; duration }
+  loop 0 0 ""

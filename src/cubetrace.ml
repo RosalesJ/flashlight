@@ -17,30 +17,37 @@ let _plane_dz = Figure.Plane.{ origin = (Point3.make ~xyz:(-3., -2., 0.)); norma
 let _sphere =  Figure.Sphere.{ center = (Point3.make ~xyz:(-2., 0., 10.)); radius = 6. }
 let _sphere2 = Figure.Sphere.{ center = (Point3.make ~xyz:(6., 0., 4.)); radius = 2. }
 
+
 let render_scene camera duration scene =
   start_canvas ();
   scene
-  |> cast_cam ~camera ~duration
+  |> cast_cam ~camera
+  |> Frame.with_duration ~duration
   |> Frame.render;
   end_canvas ()
+
 
 let play_animation anim =
   start_canvas ();
   List.iter ~f:Frame.render anim;
   end_canvas ()
 
+
 let draw_triangle t camera duration =
   start_canvas ();
   Scene.singleton (module Figure.Triangle) t
-  |> cast_cam ~camera ~duration
+  |> cast_cam ~camera
+  |> Frame.with_duration ~duration
   |> Frame.render;
   end_canvas ()
+
 
 let render_animation anim =
   start_canvas ();
   List.iter ~f:Frame.render anim;
   end_canvas ()
     
+
 let _translate_spheres =
   let rec loop n acc =
     if n = 0 then
@@ -53,6 +60,7 @@ let _translate_spheres =
   let scene = loop 30 [] in
   Scene.of_figures (module Figure.Sphere) scene
 
+
 let _plain_test camera =
   let _plane_v = Figure.Plane.{ origin = (Point3.make ~xyz:(-5., 0., 0.)); normal = (Camera.right camera)} in
   (* [_plane_b; _plane_v; (\* plane_d; plane_dz *\)] *)
@@ -62,6 +70,7 @@ let _plain_test camera =
   (* |> Scene.insert (module Figure.Plane) _plane_dz *)
   |> Scene.insert (module Figure.Sphere) _sphere
   |> Scene.insert (module Figure.Sphere) _sphere2
+
 
 let _triangle_test camera =
   let triangle = Figure.Triangle.{
@@ -80,6 +89,7 @@ let _triangle_test camera =
   let t = Affine.compose trans_back (Affine.compose rot trans) in
   draw_triangle (Figure.Triangle.move t triangle) camera 3.
 
+
 let _square_test =
   let triangle = Figure.Square.{
       a = Point3.make ~xyz:(-1.,  1.,  1.);
@@ -90,6 +100,7 @@ let _square_test =
   in
   Scene.insert (module Figure.Square) triangle Scene.empty
 
+
 let _cube_test =
   let center = Point3.make ~xyz:(-3.5, -4.5, 5.) in
   let r = 3. in
@@ -97,11 +108,14 @@ let _cube_test =
 
   Scene.insert (module Figure.Cube) cube Scene.empty
 
+
 let _final_test camera =
   [Figure.Sphere.{ center = (Point3.make ~xyz:(0., 0., 10.)); radius = 5. }]
   |> Scene.of_figures (module Figure.Sphere)
-  |> Render.cast_cam ~camera ~duration:3.
+  |> Render.cast_cam ~camera
+  |> Frame.with_duration ~duration:3.
   |> ignore
+
 
 let () =
   let camera = init () in
