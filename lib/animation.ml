@@ -11,7 +11,7 @@ let linear duration framerate camera cube trans =
       acc
     else begin
       let scene = Scene.of_figures (module Figure.Cube) [state] in
-      let frame = Frame.with_duration ~duration:(1. /. framerate) @@ Render.cast_cam ~camera scene in
+      let frame = Frame.make ~duration:(1. /. framerate) @@ Camera.capture ~camera scene in
       
       let new_state = Figure.Cube.move trans state in
       loop (i + 1) new_state (frame :: acc)
@@ -29,7 +29,7 @@ let linear_tri duration framerate camera triangle trans =
       acc
     else begin
       let scene = Scene.of_figures (module Figure.Triangle) [state] in
-      let frame = Frame.with_duration ~duration:(1. /. framerate) @@ Render.cast_cam ~camera scene in
+      let frame = Frame.make ~duration:(1. /. framerate) @@ Camera.capture ~camera scene in
       
       let new_state = Figure.Triangle.move trans state in
       loop (i + 1) new_state (frame :: acc)

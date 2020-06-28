@@ -21,8 +21,8 @@ let _sphere2 = Figure.Sphere.{ center = (Point3.make ~xyz:(6., 0., 4.)); radius 
 let render_scene camera duration scene =
   start_canvas ();
   scene
-  |> cast_cam ~camera
-  |> Frame.with_duration ~duration
+  |> Camera.capture ~camera
+  |> Frame.make ~duration
   |> Frame.render;
   end_canvas ()
 
@@ -36,8 +36,8 @@ let play_animation anim =
 let draw_triangle t camera duration =
   start_canvas ();
   Scene.singleton (module Figure.Triangle) t
-  |> cast_cam ~camera
-  |> Frame.with_duration ~duration
+  |> Camera.capture ~camera
+  |> Frame.make ~duration
   |> Frame.render;
   end_canvas ()
 
@@ -112,8 +112,8 @@ let _cube_test =
 let _final_test camera =
   [Figure.Sphere.{ center = (Point3.make ~xyz:(0., 0., 10.)); radius = 5. }]
   |> Scene.of_figures (module Figure.Sphere)
-  |> Render.cast_cam ~camera
-  |> Frame.with_duration ~duration:3.
+  |> Camera.capture ~camera
+  |> Frame.make ~duration:3.
   |> ignore
 
 

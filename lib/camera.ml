@@ -9,6 +9,8 @@ type t = { center : Point3.t
          ; width : float
          ; resolution: resolution}
 
+type snapshot = float list list
+
 let char_height = 28.
 let char_width = 15.
 
@@ -44,3 +46,35 @@ let down_dist point =
   let down = neg up in
   let down_component = dot down point <*> down in
   l2 down_component
+
+let capture ~camera scene =
+  let horiz_step = camera.width /. (Float.of_int camera.resolution.x) <*> right camera  in
+  let vert_step = -. camera.height /. (Float.of_int camera.resolution.y) <*> up in
+
+  let init =
+    let x = -. camera.width  /. 2. <*> right camera in
+    let y =    camera.height /. 2. <*> up in
+    let char_off_x = 0.5 <*> horiz_step in
+    let char_off_y = 0.5 <*> vert_step in
+    camera.center <+> x <+> y <+> char_off_x <+> char_off_y
+  in
+
+  let rec loop x y line acc =
+    if y = camera.resolution.y then
+      acc
+    else if x = camera.resolution.x then
+      loop 0 (y + 1) [] (line :: acc)
+    else begin
+      let sample_point = init
+                   <+> (Float.of_int x <*> horiz_step)
+                   <+> (Float.of_int y <*> vert_step)
+      in
+      let direction = unit (sample_point <+> neg camera.focus) in
+      let ray = Ray.{ origin = sample_point; direction } in
+      let dist = Scene.intersect_all scene ray in
+      loop (x + 1) y (dist :: line) acc
+    end
+  in
+  loop 0 0 [] []
+  |> List.map List.rev
+  |> List.rev
