@@ -1,3 +1,5 @@
+open Base
+
 type t = {
   a0: float; b0: float; c0: float;
   a1: float; b1: float; c1: float;

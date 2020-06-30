@@ -1,3 +1,5 @@
+open Base
+
 type t = {
   translation : Point3.t;
   linear_transformation : Matrix.t

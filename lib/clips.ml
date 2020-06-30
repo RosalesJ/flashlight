@@ -1,3 +1,5 @@
+open Base
+
 let triangle_spin camera =
   let framerate = 10. in
   let duration = 10. in

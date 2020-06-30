@@ -1,3 +1,4 @@
+open Base
 open Point3
 
 type resolution = { x: int; y: int }
@@ -76,5 +77,5 @@ let capture ~camera scene =
     end
   in
   loop 0 0 [] []
-  |> List.map List.rev
+  |> List.map ~f:List.rev
   |> List.rev

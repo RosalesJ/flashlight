@@ -1,3 +1,6 @@
+open Base
+open Float
+
 type axis = X | Y | Z
 
 let linear_transformation matrix =

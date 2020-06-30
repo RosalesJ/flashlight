@@ -1,3 +1,5 @@
+open Base
+
 type t = { x: float; y: float; z: float }
 
 let precision = 0.0000000001

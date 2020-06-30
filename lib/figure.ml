@@ -1,3 +1,5 @@
+open Base
+
 let blk = 0.
 let solid = 1.
 let semi_solid = 2.
