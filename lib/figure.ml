@@ -1,4 +1,5 @@
 open Base
+open Float
 
 let blk = 0.
 let solid = 1.
@@ -51,7 +52,7 @@ end = struct
     let dn = Point3.dot d normal in
     let pn = Point3.dot p normal in
     let on = Point3.dot origin normal in
-    if dn == 0. then
+    if Float.equal dn 0. then
       Float.infinity
     else begin
       let result = (on -.  pn) /. dn in
@@ -137,8 +138,8 @@ end = struct
 
   let intersect ray {front; back; up; down; left; right} =
     [front; back; up; down; left; right]
-    |> List.map (Square.intersect ray)
-    |> List.fold_left min Float.infinity
+    |> List.map ~f:(Square.intersect ray)
+    |> List.fold ~f:Float.min ~init:Float.infinity
 
   let move trans cube = pointwise (Square.move trans) cube
 end

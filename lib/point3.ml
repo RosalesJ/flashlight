@@ -1,4 +1,5 @@
 open Base
+open Float
 
 type t = { x: float; y: float; z: float }
 

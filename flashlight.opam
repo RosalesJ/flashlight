@@ -1,6 +1,6 @@
 opam-version: "2.0"
-name: "cube-trace"
-synopsis: "A cube terminal ray tracer"
+name: "flashlight"
+synopsis: "A terminal ray tracer"
 version: "0.0.1"
 
 build: [
@@ -10,6 +10,7 @@ build: [
 
 depends: [
   "dune" {build}
+  "base"
   "ANSITerminal"
 ]
 conflicts: [ "ssl" {= "0.5.6"} ]

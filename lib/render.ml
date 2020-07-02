@@ -35,8 +35,6 @@ module Frame = struct
 
   let render {contents; duration} =
     clear_canvas ();
-    (* This allows it to render properly *)
-    let contents = String.sub contents ~pos:0 ~len:((String.length contents) - 1) in
     Stdio.printf "%s" contents;
     Stdlib.flush Stdio.stdout;
     Unix.sleepf duration

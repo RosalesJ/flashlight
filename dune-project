@@ -1,5 +1,5 @@
 (lang dune 1.2)
-(name cubetrace)
+(name flashlight)
 (version 0.0.1)
 
 

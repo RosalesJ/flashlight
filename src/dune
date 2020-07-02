@@ -1,6 +1,6 @@
 (executable
-  (name cubetrace)
-  (public_name cube-trace)
+  (name flashlight)
+  (public_name flashlight)
   (modes byte exe)
   (flags (:standard -g))
   (libraries base stdio ANSITerminal lib))
