@@ -19,9 +19,9 @@ let distant = "`"
 let empty = " "
 let negative = "?"
 
-let char_from_distance =
+let char_from_distance Figure.{dist}=
   let open Float in
-  function
+  match dist with 
   | x when x < 0. -> negative
   | x when x >= 0. && x < 3. -> blk
   | x when x >= 3. && x < 5. -> solid

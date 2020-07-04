@@ -25,6 +25,8 @@ let insert mod_fig x scene =
   build_instance mod_fig x :: scene
 
 let intersect_all figures ray =
+  let dist =
   figures
-  |> List.map ~f:(fun (module X : Figure_instance) -> X.intersect ray X.this)
+  |> List.map ~f:(fun (module X : Figure_instance) -> (X.intersect ray X.this).dist)
   |> List.fold ~f:Float.min ~init:Float.infinity
+  in Figure.{dist}

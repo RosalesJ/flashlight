@@ -6,9 +6,13 @@ let solid = 1.
 let semi_solid = 2.
 let empty = 3.
 
+type intersection = {
+   dist : float
+  }
+
 module type T = sig
   type t
-  val intersect: Ray.t -> t -> float
+  val intersect: Ray.t -> t -> intersection
 end
 
 module type Movable = sig
@@ -33,13 +37,16 @@ end = struct
     let diff = p <+> neg sphere.center in
     let comp = dot d diff in
     let discr = (comp *. comp) -. (dot diff diff) +. (sphere.radius *. sphere.radius) in
-    if discr < 0. then
-      Float.infinity
-    else begin
-      let plus = -. comp +. sqrt discr in
-      let minus = -. comp -. sqrt discr in
-      Float.min plus minus
-    end
+    let dist =
+      if discr < 0. then
+        Float.infinity
+      else begin
+        let plus = -. comp +. sqrt discr in
+        let minus = -. comp -. sqrt discr in
+        Float.min plus minus
+      end
+    in
+    {dist}
 end
 
 module Plane : sig
@@ -52,6 +59,7 @@ end = struct
     let dn = Point3.dot d normal in
     let pn = Point3.dot p normal in
     let on = Point3.dot origin normal in
+    let dist =
     if Float.equal dn 0. then
       Float.infinity
     else begin
@@ -61,6 +69,8 @@ end = struct
       else
         result
     end
+    in
+    {dist}
 end
 
 
@@ -78,20 +88,23 @@ end = struct
     let normal = unit @@ cross ab ac in
 
     let plane = Plane.{origin=a; normal} in
-    let dist = Plane.intersect ray plane in
+    let p = Plane.intersect ray plane in
 
-    if dist >= Float.infinity then
+    let dist =
+    if p.dist >= Float.infinity then
       Float.infinity
     else begin
-      dist <*> ray.direction <+> ray.origin <+> neg a
+      p.dist <*> ray.direction <+> ray.origin <+> neg a
       |> Matrix.(apply @@ inv_exn @@ from_basis ~i:ab ~j:ac ~k:normal)
       |> tuple
       |> function (x, y, _) ->
         if x >= 0. && y >= 0. && x +. y <= 1. then
-          dist
+          p.dist
         else
           Float.infinity
     end
+    in
+    {dist}
 
   let move trans {a; b; c} =
     let update = Affine.apply trans in
@@ -110,7 +123,10 @@ end = struct
   let intersect ray {a; b; c; d} =
     let t1 = Triangle.{a; b; c} in
     let t2 = Triangle.{a=d; b; c} in
-    min (Triangle.intersect ray t1) (Triangle.intersect ray t2)
+    let dist = 
+      min (Triangle.intersect ray t1).dist (Triangle.intersect ray t2).dist
+    in
+    {dist}
 
   let move trans sq = pointwise (Affine.apply trans) sq
 end
@@ -137,9 +153,12 @@ end = struct
     {up = f up; back = f back; left = f left; right = f right; front = f front; down = f down }
 
   let intersect ray {front; back; up; down; left; right} =
+    let dist =
     [front; back; up; down; left; right]
-    |> List.map ~f:(Square.intersect ray)
+    |> List.map ~f:(fun x -> (Square.intersect ray x).dist)
     |> List.fold ~f:Float.min ~init:Float.infinity
+    in
+    {dist}
 
   let move trans cube = pointwise (Square.move trans) cube
 end

@@ -10,4 +10,4 @@ val union : t -> t -> t
 
 val insert : (module Figure.T with type t = 'a) -> 'a -> t -> t
 
-val intersect_all : t -> Ray.t -> float
+val intersect_all : t -> Ray.t -> Figure.intersection
