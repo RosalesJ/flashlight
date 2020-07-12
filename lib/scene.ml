@@ -5,6 +5,7 @@ module type Figure_instance = sig
   val this : t
 end
 
+(* This should end up being something more/better *)
 type t = (module Figure_instance) list
 
 let build_instance (type a) (module X : Figure.T with type t = a) x =
